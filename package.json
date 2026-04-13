@@ -12,6 +12,7 @@
   "dependencies": {
     "@fontsource/cinzel": "^5.2.8",
     "@fontsource/crimson-pro": "^5.2.8",
+    "@tauri-apps/plugin-dialog": "^2.7.0",
     "@tauri-apps/plugin-fs": "^2.5.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

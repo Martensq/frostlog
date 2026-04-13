@@ -1,3 +1,6 @@
+# Claude Code local settings
+.claude/
+
 # Logs
 logs
 *.log
@@ -12,8 +15,9 @@ dist
 dist-ssr
 *.local
 
-# Tauri build output
+# Tauri build output and generated files
 src-tauri/target/
+src-tauri/gen/
 
 # Editor directories and files
 .vscode/*

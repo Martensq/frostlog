@@ -5,6 +5,7 @@ import { useSession } from "../../context/SessionContext";
 import { useProgress } from "../../context/ProgressContext";
 import { useCompany } from "../../context/CompanyContext";
 import { IcoCheck } from "../ui/Icons";
+import SelectFrost from "../ui/SelectFrost";
 import { useToast } from "../../context/ToastContext";
 import { useT } from "../../context/LanguageContext";
 
@@ -93,19 +94,16 @@ function NewSessionForm() {
       {/* Scénario */}
       <div className="flex flex-col gap-2">
         <span className="sect-label" style={{ marginBottom: 4 }}>{t("sess_scenario_lbl")}</span>
-        <div className="relative">
-          <select
-            value={scenariosInSession[0]?.number ?? ""}
-            onChange={e => setScenariosInSession([{ ...scenariosInSession[0], number: Number(e.target.value) }])}
-            className="select-frost">
-            <option value="" disabled>{t("sess_choose_scenario")}</option>
-            {availableScenarios.map(s => {
-              const note = s.note ? s.note.slice(0, 48) + (s.note.length > 48 ? "…" : "") : "";
-              const label = `${s.priority ? "★ " : ""}${s.number}${note ? ` · ${note}` : ""}`;
-              return <option key={s.id} value={s.number}>{label}</option>;
-            })}
-          </select>
-        </div>
+        <SelectFrost
+          value={scenariosInSession[0]?.number ?? ""}
+          onChange={e => setScenariosInSession([{ ...scenariosInSession[0], number: Number(e.target.value) }])}
+          className="select-frost">
+          <option value="" disabled>{t("sess_choose_scenario")}</option>
+          {availableScenarios.map(s => {
+            const label = `${s.priority ? "★ " : ""}${s.number}${s.note ? ` · ${s.note}` : ""}`;
+            return <option key={s.id} value={s.number}>{label}</option>;
+          })}
+        </SelectFrost>
         <Link to="/scenarios" className="self-end text-xs transition-colors underline underline-offset-2" style={{ color: "var(--c-muted)" }}
           onMouseEnter={e => e.target.style.color = "var(--c-ice)"} onMouseLeave={e => e.target.style.color = "var(--c-muted)"}>
           {t("sess_available_scen")}

@@ -7,6 +7,7 @@ import { GI, GI_FILTER, GIcon } from "../utils/gameIcons.jsx";
 import { TITLE_BY_KEY } from "../utils/titles.jsx";
 import { NavPill, NavPillSession } from "../components/layout/NavPill";
 import { IcoHome } from "../components/ui/Icons";
+import SelectFrost from "../components/ui/SelectFrost";
 import { useToast } from "../context/ToastContext";
 import { killScore, computeMVP, computeMVPScores } from "../utils/statUtils";
 import { useHoldButton } from "../hooks/useHoldButton";
@@ -928,12 +929,10 @@ function ScenarioStatsPage() {
                       {t("stats_no_scenario")}{" "}<Link to="/active-session" style={{ color: "var(--c-ice)" }}>{t("stats_add_scenario_link")}</Link>
                     </p>
                   ) : (
-                    <div className="relative">
-                      <select value={selectedScenarioId} onChange={e => { setSelectedScenarioId(e.target.value); setSetupError(null); }} className="select-frost">
-                        <option value="" disabled>{t("sess_choose_scenario")}</option>
-                        {sessionScenarios.map(s => <option key={s.id} value={s.id}>{t("lbl_scenario", { n: s.number })}</option>)}
-                      </select>
-                    </div>
+                    <SelectFrost value={selectedScenarioId} onChange={e => { setSelectedScenarioId(e.target.value); setSetupError(null); }}>
+                      <option value="" disabled>{t("sess_choose_scenario")}</option>
+                      {sessionScenarios.map(s => <option key={s.id} value={s.id}>{t("lbl_scenario", { n: s.number })}</option>)}
+                    </SelectFrost>
                   )}
                 </div>
 
@@ -957,30 +956,25 @@ function ScenarioStatsPage() {
                           <span className="text-xs flex-shrink-0" style={{ color: "var(--c-muted)", fontFamily: "'Cinzel', serif", width: 72 }}>
                             {t("lbl_player", { n: slotIdx + 1 })}
                           </span>
-                          <div className="relative flex-1">
-                            <select
-                              value={currentId}
-                              onChange={e => {
-                                const newId = e.target.value;
-                                setOrderedMemberIds(prev => {
-                                  const arr = [...prev];
-                                  while (arr.length <= slotIdx) arr.push("");
-                                  // Si le joueur est déjà dans un autre slot, on switche
-                                  const otherIdx = arr.findIndex((id, i) => id === newId && i !== slotIdx);
-                                  if (otherIdx !== -1) arr[otherIdx] = arr[slotIdx] ?? "";
-                                  arr[slotIdx] = newId;
-                                  return arr;
-                                });
-                              }}
-                              className="select-frost">
-                              <option value="">{t("stats_choose_player")}</option>
-                              {presentMembers.map(m => (
-                                <option key={m.id} value={m.id}>
-                                  {m.pseudo}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
+                          <SelectFrost
+                            value={currentId}
+                            onChange={e => {
+                              const newId = e.target.value;
+                              setOrderedMemberIds(prev => {
+                                const arr = [...prev];
+                                while (arr.length <= slotIdx) arr.push("");
+                                const otherIdx = arr.findIndex((id, i) => id === newId && i !== slotIdx);
+                                if (otherIdx !== -1) arr[otherIdx] = arr[slotIdx] ?? "";
+                                arr[slotIdx] = newId;
+                                return arr;
+                              });
+                            }}
+                            style={{ flex: 1 }}>
+                            <option value="">{t("stats_choose_player")}</option>
+                            {presentMembers.map(m => (
+                              <option key={m.id} value={m.id}>{m.pseudo}</option>
+                            ))}
+                          </SelectFrost>
                         </div>
                       );
                     })}

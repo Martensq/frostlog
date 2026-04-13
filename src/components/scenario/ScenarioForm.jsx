@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useProgress } from "../../context/ProgressContext";
 import { useCompany } from "../../context/CompanyContext";
 import { IcoCheck, IcoTrash } from "../ui/Icons";
+import SelectFrost from "../ui/SelectFrost";
 import { useT } from "../../context/LanguageContext";
 
 const SECTION_REASONS = ["Écoulement du temps", "Création / amélioration bâtiment", "Retraite personnage", "Enveloppe", "Autre"];
@@ -166,38 +167,38 @@ function ScenarioForm({ initialData = null, onSubmit, onDelete, submitLabel = nu
 
       <div className="flex flex-col gap-2">
         <span className="sect-label" style={{ marginBottom: 2 }}>{t("form_scen_unlocked_by")}</span>
-        <select value={unlockedByType} onChange={e => handleUBTypeChange(e.target.value)} className="select-frost">
+        <SelectFrost value={unlockedByType} onChange={e => handleUBTypeChange(e.target.value)}>
           <option value="">{t("form_source_none")}</option>
           <option value="scenario">{t("form_source_scenario")}</option>
           <option value="quete">{t("form_source_quest")}</option>
           <option value="evenement">{t("form_source_event")}</option>
           <option value="section">{t("form_source_section")}</option>
-        </select>
+        </SelectFrost>
 
         {unlockedByType === "scenario" && (
-          <select value={unlockedByValue} onChange={e => setUnlockedByValue(e.target.value)} className="select-frost">
+          <SelectFrost value={unlockedByValue} onChange={e => setUnlockedByValue(e.target.value)}>
             <option value="">{t("form_choose_scenario")}</option>
             {[...scenarios]
               .filter(s => !isEditMode || s.number !== Number(number))
               .sort((a, b) => a.number - b.number)
               .map(s => (
                 <option key={s.id} value={s.number}>
-                  {t("lbl_scenario", { n: s.number })}{s.note ? ` · ${s.note.slice(0, 40)}${s.note.length > 40 ? "…" : ""}` : ""}
+                  {t("lbl_scenario", { n: s.number })}{s.note ? ` · ${s.note}` : ""}
                 </option>
               ))}
-          </select>
+          </SelectFrost>
         )}
 
         {unlockedByType === "quete" && (
           <div className="flex gap-2">
             <input type="text" value={unlockedByValue} onChange={e => setUnlockedByValue(e.target.value)}
               className="input-frost" style={{ flex: 1 }} placeholder={t("form_quest_ph")} />
-            <select value={unlockedByPlayerName} onChange={e => setUnlockedByPlayerName(e.target.value)} className="select-frost" style={{ width: "auto", flexShrink: 0 }}>
+            <SelectFrost value={unlockedByPlayerName} onChange={e => setUnlockedByPlayerName(e.target.value)} style={{ width: "auto", flexShrink: 0 }}>
               <option value="">{t("form_player_ph")}</option>
               {company.members.map(m => (
                 <option key={m.id} value={m.pseudo}>{m.pseudo}</option>
               ))}
-            </select>
+            </SelectFrost>
           </div>
         )}
 
@@ -215,10 +216,10 @@ function ScenarioForm({ initialData = null, onSubmit, onDelete, submitLabel = nu
             <div className="flex gap-2">
               <input type="text" value={unlockedByValue} onChange={e => setUnlockedByValue(e.target.value)}
                 className="input-frost" style={{ width: 110, flexShrink: 0 }} placeholder={t("form_section_num_ph")} />
-              <select value={unlockedBySectionReason} onChange={e => setUnlockedBySectionReason(e.target.value)} className="select-frost" style={{ flex: 1 }}>
+              <SelectFrost value={unlockedBySectionReason} onChange={e => setUnlockedBySectionReason(e.target.value)} style={{ flex: 1 }}>
                 <option value="">{t("form_section_reason_ph")}</option>
                 {SECTION_REASONS.map(r => <option key={r} value={r}>{REASON_LABELS[r] ?? r}</option>)}
-              </select>
+              </SelectFrost>
             </div>
             {unlockedBySectionReason === "Autre" && (
               <input type="text" value={unlockedBySectionReasonOther} onChange={e => setUnlockedBySectionReasonOther(e.target.value)}

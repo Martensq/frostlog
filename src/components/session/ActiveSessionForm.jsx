@@ -8,6 +8,7 @@ import { localISOString } from "../../utils/dateUtils";
 import { KEYS } from "../../utils/storageKeys";
 import storage from "../../utils/storage";
 import EndSessionModal from "./EndSessionModal";
+import SelectFrost from "../ui/SelectFrost";
 import Modal from "../ui/Modal";
 import ScenarioForm from "../scenario/ScenarioForm";
 import { IcoX, IcoCheck, IcoSave, IcoPlus, IcoUnlock, IcoPencil } from "../ui/Icons";
@@ -203,23 +204,19 @@ function ActiveSessionForm() {
                 const inProgress = (() => { try { return JSON.parse(setupRaw)?.scenarioId === s.id; } catch { return false; } })();
                 const locked = hasStats || inProgress;
                 return (
-                  <div className="relative flex-1">
-                    <select
-                      value={s.number}
-                      disabled={locked}
-                      onChange={e => { setScenariosInSession(prev =>
-                        prev.map(sc => sc.id === s.id ? { ...sc, number: Number(e.target.value) } : sc)
-                      ); markDirty(); }}
-                      className="select-frost"
-                      style={locked ? { opacity: 0.6, cursor: "not-allowed" } : {}}
-                    >
-                      <option value="" disabled>{t("sess_choose_scenario")}</option>
-                      {availableScenarios.map(sc => {
-                        const note = sc.note ? sc.note.slice(0, 60) + (sc.note.length > 60 ? "…" : "") : "";
-                        return <option key={sc.id} value={sc.number}>{sc.priority ? "★ " : ""}{sc.number}{note ? ` · ${note}` : ""}</option>;
-                      })}
-                    </select>
-                  </div>
+                  <SelectFrost
+                    value={s.number}
+                    disabled={locked}
+                    onChange={e => { setScenariosInSession(prev =>
+                      prev.map(sc => sc.id === s.id ? { ...sc, number: Number(e.target.value) } : sc)
+                    ); markDirty(); }}
+                    style={locked ? { flex: 1, opacity: 0.6, cursor: "not-allowed" } : { flex: 1 }}
+                  >
+                    <option value="" disabled>{t("sess_choose_scenario")}</option>
+                    {availableScenarios.map(sc => {
+                      return <option key={sc.id} value={sc.number}>{sc.priority ? "★ " : ""}{sc.number}{sc.note ? ` · ${sc.note}` : ""}</option>;
+                    })}
+                  </SelectFrost>
                 );
               })()}
               <div className="flex gap-4 flex-shrink-0">

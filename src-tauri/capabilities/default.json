@@ -10,6 +10,7 @@
     "core:window:allow-close",
     "core:webview:allow-set-webview-zoom",
     "fs:allow-app-read-recursive",
-    "fs:allow-app-write-recursive"
+    "fs:allow-app-write-recursive",
+    "dialog:allow-save"
   ]
 }
